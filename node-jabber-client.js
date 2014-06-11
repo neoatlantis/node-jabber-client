@@ -7,7 +7,7 @@
  */
 require('./lib');
 
-var port = process.argv[2] || 10086;
+var port = process.argv[2] || 7777;
 
 function mimeType(filename){
     var map = {
@@ -48,6 +48,12 @@ $.node.http.createServer(function(request, response) {
      
         if($.node.fs.statSync(filename).isDirectory())
             filename = $.tools.resolve('web', uri, 'index.html');
+
+        // special:
+        //  when ends with `.javascript`, will execute at server
+        if(filename.endsWith('.javascript'))
+            return $.jsas(request, response)(require(filename));
+        
      
         $.node.fs.readFile(filename, "binary", function(err, file){
             var gotHeader = header();
