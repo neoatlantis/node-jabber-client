@@ -2,6 +2,7 @@
     "name": "node-jabber-client",
     "dependencies": {
         "node-xmpp": "*",
+        "node-salsa20": "git://github.com/neoatlantis/node-salsa20.git",
         "async": "0.7.x"
     },
     "engines": {
