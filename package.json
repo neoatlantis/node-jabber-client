@@ -1,0 +1,11 @@
+{
+    "name": "node-jabber-client",
+    "dependencies": {
+        "node-xmpp": "*",
+        "async": "0.7.x"
+    },
+    "engines": {
+        "node": ">=0.10"
+    },
+    "license": "GPLv3"
+}
