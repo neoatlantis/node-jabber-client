@@ -12,7 +12,9 @@ API Features
 ------------
 
 * to login/logout a user
+  
   the user's password is not able to be set using API. It is written in
   config file of this client and protected under a main passphrase.
+
 * to retrive and refresh roster
 * to push/pull messages from message queues
