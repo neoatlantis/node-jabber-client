@@ -47,6 +47,7 @@ $.node.http.createServer(function(request, response) {
                 method: 'POST'
             }
         );
+    if('/xmpp' == pathname) return new _processXMPP(request, response);
 
     // static file server
     
@@ -85,6 +86,8 @@ $.node.http.createServer(function(request, response) {
     });
 }).listen(parseInt(port, 10));
 
+//////////////////////////////////////////////////////////////////////////////
+
 function _proxy(req, res, options){
     req.on('data', function(chunk) {
         var proxy_req = $.node.http.request(options, function(proxy_res) {
@@ -97,4 +100,45 @@ function _proxy(req, res, options){
         //console.log('xmpp request: ' + chunk.toString());
         proxy_req.end(chunk.toString());
     });
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+function _processXMPP(req, res){
+    var self = this;
+
+    var get = $.node.querystring.parse($.node.url.parse(req.url).query);
+    
+    try{
+        var jid = new $.node.xmpp.JID(get.jid),
+            bareJID = jid.bare().toString();
+    } catch(e){
+        res.writeHead(400);
+        res.end('invalid jid: ' + get.jid);
+        return;
+    };
+
+    var action = get.action || 'show';
+    if([
+        'show',
+        'login', 
+    ].indexOf(action) < 0){ 
+        res.writeHead(400);
+        res.end('invalid action: ' + action);
+    };
+
+    var output = {
+        jid: bareJID,
+    };
+
+    switch(action){
+        case 'show':
+        default:
+            
+            break;
+    };
+
+    res.writeHead(200);
+    res.end(JSON.stringify(output));
+    return this;
 };
