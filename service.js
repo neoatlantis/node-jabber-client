@@ -135,7 +135,7 @@ function _processXMPP(req, res){
     switch(action){
         case 'show':
         default:
-            
+            output = _xmppClients[bareJID].report();
             break;
     };
 
