@@ -8,7 +8,10 @@
 require('./lib');
 
 var port = process.argv[2] || 7777,
-    xmppBoshServer = $.node.bosh.start_bosh();
+    boshPort = 5280,
+    xmppBoshServer = $.node.bosh.start_bosh({
+        port: boshPort,
+    });
 
 function mimeType(filename){
     var map = {
@@ -33,7 +36,17 @@ $.node.http.createServer(function(request, response) {
             'Content-Type': 'text/plain',
         };};
 
-    if('/~' == pathname) return new _process(request, response);
+    if('/bosh' == pathname) 
+        return new _proxy(
+            request,
+            response, 
+            {
+                host: '0.0.0.0',
+                port: boshPort,
+                path: '/http-bind/',
+                method: 'POST'
+            }
+        );
 
     // static file server
     
@@ -71,3 +84,17 @@ $.node.http.createServer(function(request, response) {
         });
     });
 }).listen(parseInt(port, 10));
+
+function _proxy(req, res, options){
+    req.on('data', function(chunk) {
+        var proxy_req = $.node.http.request(options, function(proxy_res) {
+            proxy_res.on('data', function(proxy_data) {
+                //console.log('xmpp response: ' + proxy_data.toString());
+                res.end(proxy_data.toString());
+            });
+        });
+
+        //console.log('xmpp request: ' + chunk.toString());
+        proxy_req.end(chunk.toString());
+    });
+};
