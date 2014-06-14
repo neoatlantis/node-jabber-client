@@ -133,6 +133,11 @@ function _processXMPP(req, res){
     };
 
     switch(action){
+        case 'login':
+            var newPassword = get.password || null;
+            var ret = _xmppClients[bareJID].login(newPassword, false); // TODO presence
+            output.result = ret;
+            break;
         case 'show':
         default:
             output = _xmppClients[bareJID].report();
