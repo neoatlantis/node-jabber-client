@@ -11,6 +11,8 @@
         <script src="/js/notify.js"></script>
         <script src="/js/converse.min.js"></script>
 
+        <script src="/js/index.js"></script>
+
         <link href="/css/jquery-ui.css" rel="stylesheet">
         <link href="/css/bootstrap.css" rel="stylesheet">
         <link href="/css/bootstrap-theme.css" rel="stylesheet">
@@ -23,10 +25,26 @@
     <body>
     <div id="noscript" class="alert alert-danger">本页面必须使用JavaScript才能查看，请启用JavaScript或使用支持JavaScript的浏览器。</div>
     <div id="main" class="container" style="display: none">
-
-        <div id="conversejs"></div>
+    
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header dropdown">
+            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">开始</a>
+            <ul class="dropdown-menu">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> 发起新聊天</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-lock"></span> 启动加密程序</a></li>
+            </ul>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#"><span class="glyphicon glyphicon-star"></span> From_HMX</li></li>
+        </ul>
+        <p class="navbar-text navbar-right">2008-05-12 14:28:04</p>
+    </nav>
+    <div style="height: 70px"></div>
 
     </div></body>
+    <!--
     <script>
     require(['converse'], function (converse) {
         converse.initialize({
@@ -41,4 +59,5 @@
         });
     });
     </script>
+    -->
 </html>
