@@ -7,7 +7,8 @@
  */
 require('./lib');
 
-var port = process.argv[2] || 7777;
+var port = process.argv[2] || 7777,
+    xmppBoshServer = $.node.bosh.start_bosh();
 
 function mimeType(filename){
     var map = {
@@ -70,8 +71,3 @@ $.node.http.createServer(function(request, response) {
         });
     });
 }).listen(parseInt(port, 10));
-
-//////////////////////////////////////////////////////////////////////////////
-
-function _process(req, res){
-};

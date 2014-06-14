@@ -3,6 +3,7 @@
     "dependencies": {
         "node-xmpp": "*",
         "node-salsa20": "git://github.com/neoatlantis/node-salsa20.git",
+        "node-xmpp-bosh": "0.7.x",
         "async": "0.7.x"
     },
     "engines": {
