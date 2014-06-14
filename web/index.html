@@ -9,11 +9,12 @@
         <script src="/js/EventEmitter.js"></script>
         <script src="/js/bootstrap.js"></script>
         <script src="/js/notify.js"></script>
+        <script src="/js/converse.min.js"></script>
 
         <link href="/css/jquery-ui.css" rel="stylesheet">
         <link href="/css/bootstrap.css" rel="stylesheet">
         <link href="/css/bootstrap-theme.css" rel="stylesheet">
-        <link href="/css/enigma.css" rel="stylesheet">
+        <link href="/css/converse.min.css" rel="stylesheet">
 
         <script>
             $(function(){$('#noscript').hide(); $('#main').show();});
@@ -23,5 +24,21 @@
     <div id="noscript" class="alert alert-danger">本页面必须使用JavaScript才能查看，请启用JavaScript或使用支持JavaScript的浏览器。</div>
     <div id="main" class="container" style="display: none">
 
+        <div id="conversejs"></div>
+
     </div></body>
+    <script>
+    require(['converse'], function (converse) {
+        converse.initialize({
+            auto_list_rooms: false,
+            auto_subscribe: false,
+            bosh_service_url: 'https://bind.conversejs.org', // Please use this connection manager only for testing purposes
+            hide_muc_server: false,
+            i18n: locales.en, // Refer to ./locale/locales.js to see which locales are supported
+            prebind: false,
+            show_controlbox_by_default: true,
+            xhr_user_search: false
+        });
+    });
+    </script>
 </html>
