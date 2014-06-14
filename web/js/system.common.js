@@ -16,10 +16,8 @@ COMMON.hex.encode = function(str){
 COMMON.random4 = function() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 };
-COMMON.uuid = (function() {
-  /* https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript */
-  return function() {
-    return 
+COMMON.uuid = function() {
+    return String(
         COMMON.random4() + COMMON.random4() 
         + '-'
         + COMMON.random4()
@@ -29,8 +27,8 @@ COMMON.uuid = (function() {
         + COMMON.random4() 
         + '-'
         + COMMON.random4() + COMMON.random4() + COMMON.random4()
-  };
-})();
+    );
+};
 COMMON.pageIdentifier = 
     COMMON.random4()
     + COMMON.random4()

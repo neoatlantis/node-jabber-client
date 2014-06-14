@@ -2,16 +2,19 @@ WM = {}; // Windows Manager
 
 WM.register = function(title, content){
     var handle = COMMON.uuid();
-    $(content).attr('data-window-uuid', handle);
+    $(content).attr('data-uuid', handle);
 
     $('<li>')
-        .attr('data-window-uuid', handle)
+        .data('uuid', handle)
         .append($('<a>', {href: '#'})
             .text(title)
             .prepend($('<span>')
                 .addClass('glyphicon glyphicon-star')
             )
         )
+        .click(function(){
+            alert($(this).data('uuid'));
+        })
         .appendTo($('#nav-switches'))
     ;
 };
