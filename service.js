@@ -103,7 +103,7 @@ function _proxy(req, res, options){
 };
 
 //////////////////////////////////////////////////////////////////////////////
-
+var _xmppClients = {};
 function _processXMPP(req, res){
     var self = this;
 
@@ -112,6 +112,7 @@ function _processXMPP(req, res){
     try{
         var jid = new $.node.xmpp.JID(get.jid),
             bareJID = jid.bare().toString();
+        if(!_xmppClients[bareJID]) _xmppClients[bareJID] = $.xmpp(bareJID);
     } catch(e){
         res.writeHead(400);
         res.end('invalid jid: ' + get.jid);
