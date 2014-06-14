@@ -11,6 +11,8 @@
         <script src="/js/notify.js"></script>
         <script src="/js/converse.min.js"></script>
 
+        <script src="/js/system.common.js"></script>
+        <script src="/js/windowsManager.js"></script>
         <script src="/js/index.js"></script>
 
         <link href="/css/jquery-ui.css" rel="stylesheet">
@@ -29,18 +31,21 @@
     
     <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header dropdown">
-            <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">开始</a>
-            <ul class="dropdown-menu">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> 发起新聊天</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-lock"></span> 启动加密程序</a></li>
-            </ul>
+            <div class="collapse navbar-collapse">
+
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header dropdown">
+                    <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">开始</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> 发起新聊天</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-lock"></span> 启动加密程序</a></li>
+                    </ul>
+                </div>
+                <ul class="nav navbar-nav" id="nav-switches"></ul>
+                <p class="navbar-text navbar-right" id="nav-datetime">2008-05-12 14:28:04</p>
+
+            </div>
         </div>
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="#"><span class="glyphicon glyphicon-star"></span> From_HMX</li></li>
-        </ul>
-        <p class="navbar-text navbar-right">2008-05-12 14:28:04</p>
     </nav>
     <div style="height: 70px"></div>
 
