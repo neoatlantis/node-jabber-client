@@ -2,7 +2,7 @@ WM = {}; // Windows Manager
 
 WM.register = function(title, content){
     var handle = COMMON.uuid();
-    $(content).attr('data-uuid', handle);
+    $(content).dialog().attr('data-uuid', handle);
 
     $('<li>')
         .data('uuid', handle)
@@ -13,7 +13,23 @@ WM.register = function(title, content){
             )
         )
         .click(function(){
-            alert($(this).data('uuid'));
+            var uuid = $(this).data('uuid');
+            $('#nav-switches').children('li').each(function(){
+                var thisUUID = $(this).data('uuid');
+                if(uuid != thisUUID) return $(this).removeClass('active');
+
+                if($(this).hasClass('active')){
+                    // hide this dialog
+                } else {
+                    // show this dialog
+                    $(this).addClass('active');
+                    $('[data-uuid="' + uuid + '"])
+                        .show()
+                        .dialog('moveToTop')
+                    ;
+                };
+            });
+
         })
         .appendTo($('#nav-switches'))
     ;
