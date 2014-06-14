@@ -122,7 +122,8 @@ function _processXMPP(req, res){
     var action = get.action || 'show';
     if([
         'show',
-        'login', 
+        'login',
+        'logout',
     ].indexOf(action) < 0){ 
         res.writeHead(400);
         res.end('invalid action: ' + action);
@@ -133,10 +134,12 @@ function _processXMPP(req, res){
     };
 
     switch(action){
+        case 'logout':
+            output.result = _xmppClients[bareJID].logout();
+            break;
         case 'login':
             var newPassword = get.password || null;
-            var ret = _xmppClients[bareJID].login(newPassword, false); // TODO presence
-            output.result = ret;
+            output.result = _xmppClients[bareJID].login(newPassword, true); // TODO presence
             break;
         case 'show':
         default:
