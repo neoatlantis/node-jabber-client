@@ -6,7 +6,7 @@ function _xmppClient(){
     var self = this;
     var dialog = WM.register('登录XMPP', $('<div>'), {
         width: 450,
-        height: 200,
+        height: 230,
     });
 
     function _drawLoginForm(){
@@ -30,7 +30,7 @@ function _xmppClient(){
                 })
                     .addClass('form-control')
             ))
-            .appendTo(form);
+            .appendTo(form)
         ;
         
         // add password input
@@ -48,8 +48,16 @@ function _xmppClient(){
                 })
                     .addClass('form-control')
             ))
-            .appendTo(form);
+            .appendTo(form)
         ;
+
+        dialog.buttons([
+            {
+                text: '登录',
+                click: function(){
+                },
+            },
+        ]);
 
     };
 

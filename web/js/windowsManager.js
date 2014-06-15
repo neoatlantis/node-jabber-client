@@ -46,7 +46,7 @@ WM.register = function(_title, _div, _conf){
     var theManagedDialog = new (function wmDialogRegister(title, div, conf){
         var self = this;
 
-        var title = title;
+        var title = title, buttons = [];
 
         this.uuid = COMMON.uuid();
         this.dialog = div
@@ -64,6 +64,14 @@ WM.register = function(_title, _div, _conf){
             title = v;
             $(div).attr('title', title).dialog('option', 'title', v);
             return title;
+        };
+
+        this.buttons = function(v){
+            if(!v) return buttons;
+            buttons = v;
+            $(div).dialog('option', 'buttons', v);
+            $('button').addClass('btn');
+            return buttons;
         };
 
         return this;
