@@ -1,7 +1,7 @@
 WM = {}; // Windows Manager
 
-WM._newTaskBarButton = function(managedDialog){
-    return new (function taskBarButton(){
+WM._newTaskBarButton = function(_managedDialog){
+    return new (function(managedDialog){
         var self = this;
         var taskBarButtonItem = $('<li>')
             .attr('data-wmbtn', managedDialog.uuid)
@@ -47,11 +47,11 @@ WM._newTaskBarButton = function(managedDialog){
         });
 
         return this;
-    })();
+    })(_managedDialog);
 };
 
 WM.register = function(_title, _div, _conf){
-    var theManagedDialog = new (function wmDialogRegister(title, div, conf){
+    var theManagedDialog = new (function(title, div, conf){
         var self = this;
 
         var title = title, buttons = [];

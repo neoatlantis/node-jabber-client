@@ -12,7 +12,7 @@ function _xmppClientLogin(){
         dialogClass: 'no-close',
     });
 
-    var target = dialog.dialog.empty();
+    var target = $(dialog._dialogSelector).empty();
     var form = $('<form>', {role: 'form'})
         .addClass('form-horizontal')
         .appendTo(target);
@@ -115,7 +115,7 @@ function _xmppClientMain(jid){
         .addClass('dropdown-menu')
         .appendTo(dlgStatusChanger)
     ;
-//    dlgStatusChanger.appendTo(dialog.dialog);
+    dlgStatusChanger.appendTo(dialog._dialogSelector);
 
     
     // add list
