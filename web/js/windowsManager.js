@@ -42,8 +42,8 @@ WM._newTaskBarButton = function(managedDialog){
     })();
 };
 
-WM.register = function(_title, _div){
-    var theManagedDialog = new (function wmDialogRegister(title, div){
+WM.register = function(_title, _div, _conf){
+    var theManagedDialog = new (function wmDialogRegister(title, div, conf){
         var self = this;
 
         var title = title;
@@ -56,8 +56,9 @@ WM.register = function(_title, _div){
             .on("dialogclose", function(event, ui){
                 $(div).remove();
             })
-            .dialog()
+            .dialog(conf)
         ;
+
         this.title = function(v){
             if(!v) return title;
             title = v;
@@ -66,7 +67,7 @@ WM.register = function(_title, _div){
         };
 
         return this;
-    })(_title, _div);
+    })(_title, _div, _conf);
 
     WM._newTaskBarButton(theManagedDialog);
     return theManagedDialog;
