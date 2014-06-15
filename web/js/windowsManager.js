@@ -54,6 +54,7 @@ WM.register = function(_title, _div, _conf){
         var self = this;
 
         var title = title, buttons = [];
+        conf.autoOpen = false;
 
         this.uuid = COMMON.uuid();
         this.dialog = div
@@ -81,6 +82,10 @@ WM.register = function(_title, _div, _conf){
 
         this.close = function(){
             self.dialog.dialog('close');
+        };
+
+        this.show = function(){ 
+            self.dialog.dialog('open');
         };
 
         return this;
