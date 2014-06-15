@@ -46,10 +46,11 @@ WM.register = function(_title, _div){
     var theManagedDialog = new (function wmDialogRegister(title, div){
         var self = this;
 
+        var title = title;
+
         this.uuid = COMMON.uuid();
-        this.title = title;
         this.dialog = div
-            .attr('title', self.title)
+            .attr('title', title)
             .attr('data-uuid', self.uuid)
             .appendTo('body')
             .on("dialogclose", function(event, ui){
@@ -57,6 +58,12 @@ WM.register = function(_title, _div){
             })
             .dialog()
         ;
+        this.title = function(v){
+            if(!v) return title;
+            title = v;
+            $(div).attr('title', title).dialog('option', 'title', v);
+            return title;
+        };
 
         return this;
     })(_title, _div);

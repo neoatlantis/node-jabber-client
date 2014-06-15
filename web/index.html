@@ -13,6 +13,7 @@
         <script src="/js/system.common.js"></script>
         <script src="/js/windowsManager.js"></script>
         <script src="/js/index.js"></script>
+        <script src="/js/xmppClient.js"></script>
 
         <link href="/css/jquery-ui.css" rel="stylesheet">
         <link href="/css/bootstrap.css" rel="stylesheet">
@@ -20,7 +21,12 @@
         <link href="/css/index.css" rel="stylesheet">
 
         <script>
-            $(function(){$('#noscript').hide(); $('#main').show();});
+            $(function(){
+                $('#noscript').hide();
+                $('#main').show();
+
+                $('#menu-xmpp').click(xmppClient);
+            });
         </script>
     </head>
     <body>
@@ -35,12 +41,12 @@
                 <div class="navbar-header dropdown">
                     <a class="navbar-brand dropdown-toggle" data-toggle="dropdown" href="#">开始</a>
                     <ul class="dropdown-menu">
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> 发起新聊天</a></li>
+                        <li id="menu-xmpp"><a href="#"><span class="glyphicon glyphicon-user"></span> 登录帐号</a></li>
                         <li><a href="#"><span class="glyphicon glyphicon-lock"></span> 启动加密程序</a></li>
                     </ul>
                 </div>
                 <ul class="nav navbar-nav" id="nav-switches"></ul>
-                <p class="navbar-text navbar-right" id="nav-datetime">2008-05-12 14:28:04</p>
+                <p class="navbar-text navbar-right" id="nav-datetime">系统时间</p>
 
             </div>
         </div>
