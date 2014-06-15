@@ -53,6 +53,7 @@ WM._newTaskBarButton = function(_managedDialog){
 WM.register = function(_title, _div, _conf){
     var theManagedDialog = new (function(title, div, conf){
         var self = this;
+        console.log(arguments);
 
         var title = title, buttons = [];
         conf.autoOpen = false;
