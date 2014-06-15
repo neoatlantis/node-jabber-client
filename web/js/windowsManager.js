@@ -13,25 +13,26 @@ WM._newTaskBarButton = function(managedDialog){
             .appendTo($('#nav-switches'))
         ;
 
-        taskBarButtonItem.click(function(){
+        function onTaskBarButtonClick(){
             var thisButton = $(taskBarButtonItem),
-                thisDialog = managedDialog.dialog;
+                thisDialog = managedDialog.dialog,
+                thisDialogAll = thisDialog.parent('[role="dialog"]');
 
             var wasActive = thisButton.hasClass('active');
             $('#nav-switches').children('li').removeClass('active');                
             
             if(wasActive){
                 // hide this dialog
-                thisDialog.hide();
+                thisDialogAll.hide();
             } else {
                 // show this dialog
+                thisDialogAll.show();
                 thisButton.addClass('active');
-                thisDialog
-                    .show()
-                    .dialog('moveToTop')
-                ;
+                thisDialog .dialog('moveToTop') ;
             };
-        });
+        };
+        taskBarButtonItem.click(onTaskBarButtonClick);
+        onTaskBarButtonClick();
 
         managedDialog.dialog.on('dialogclose', function(){
             $(taskBarButtonItem).remove();
@@ -52,7 +53,7 @@ WM.register = function(_title, _div){
             .attr('data-uuid', self.uuid)
             .appendTo('body')
             .on("dialogclose", function(event, ui){
-                $('[data-uuid="' + handle + '"]').remove();
+                $(div).remove();
             })
             .dialog()
         ;
