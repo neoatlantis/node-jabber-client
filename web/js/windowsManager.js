@@ -4,6 +4,7 @@ WM._newTaskBarButton = function(managedDialog){
     return new (function taskBarButton(){
         var self = this;
         var taskBarButtonItem = $('<li>')
+            .attr('data-wmbtn', managedDialog.uuid)
             .append($('<a>', {href: '#'})
                 .text(managedDialog.title)
                 .prepend($('<span>')
@@ -13,19 +14,19 @@ WM._newTaskBarButton = function(managedDialog){
             .appendTo($('#nav-switches'))
         ;
 
-        var thisButton = $(taskBarButtonItem),
-            thisDialog = managedDialog.dialog,
+        var thisButtonSelector = '[data-wmbtn="' + managedDialog.uuid + '"]';
+        var thisDialog = $(managedDialog._dialogSelector),
             thisDialogAll = thisDialog.parent('[role="dialog"]');
 
         function onDialogFocus(){
             $('#nav-switches').children('li').removeClass('active');
-            thisButton.addClass('active');
+            $(thisButtonSelector).addClass('active');
         };
         thisDialog.on('dialogfocus', onDialogFocus);
         thisDialogAll.on('click', onDialogFocus);
 
         function onTaskBarButtonClick(){
-            var wasActive = thisButton.hasClass('active');
+            var wasActive = $(thisButtonSelector).hasClass('active');
             $('#nav-switches').children('li').removeClass('active');                
             
             if(wasActive){
@@ -34,7 +35,7 @@ WM._newTaskBarButton = function(managedDialog){
             } else {
                 // show this dialog
                 thisDialogAll.show();
-                thisButton.addClass('active');
+                $(thisButtonSelector).addClass('active');
                 thisDialog.dialog('moveToTop') ;
             };
         };
@@ -42,7 +43,7 @@ WM._newTaskBarButton = function(managedDialog){
         onTaskBarButtonClick();
 
         managedDialog.dialog.on('dialogclose', function(){
-            $(taskBarButtonItem).remove();
+            $(thisButtonSelector).remove();
         });
 
         return this;
@@ -59,35 +60,37 @@ WM.register = function(_title, _div, _conf){
         this.uuid = COMMON.uuid();
         this.dialog = div
             .attr('title', title)
-            .attr('data-uuid', self.uuid)
+            .attr('data-wmdlg', self.uuid)
             .appendTo('body')
             .on("dialogclose", self.close)
             .dialog(conf)
         ;
+        this._dialogSelector = '[data-wmdlg="' + self.uuid + '"]';
 
         this.title = function(v){
             if(!v) return title;
             title = v;
-            $(div).attr('title', title).dialog('option', 'title', v);
+            $(self._dialogSelector)
+                .attr('title', title)
+                .dialog('option', 'title', v)
+            ;
             return title;
         };
 
         this.buttons = function(v){
             if(!v) return buttons;
             buttons = v;
-            $(div).dialog('option', 'buttons', v);
+            $(self._dialogSelector).dialog('option', 'buttons', v);
             $('button').addClass('btn btn-default');
             return buttons;
         };
 
         this.close = function(){
-            self.dialog.dialog('close');
-            self.dialog.dialog('destroy');
-            self.dialog.remove();
+            $(self._dialogSelector).dialog('close').dialog('destroy').remove();
         };
 
         this.show = function(){ 
-            self.dialog.dialog('open');
+            $(self._dialogSelector).dialog('open');
         };
 
         return this;
