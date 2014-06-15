@@ -61,7 +61,7 @@ WM.register = function(_title, _div, _conf){
             .attr('title', title)
             .attr('data-uuid', self.uuid)
             .appendTo('body')
-            .on("dialogclose", $(div).remove)
+            .on("dialogclose", self.close)
             .dialog(conf)
         ;
 
@@ -82,6 +82,8 @@ WM.register = function(_title, _div, _conf){
 
         this.close = function(){
             self.dialog.dialog('close');
+            self.dialog.dialog('destroy');
+            self.dialog.remove();
         };
 
         this.show = function(){ 
