@@ -94,8 +94,10 @@ function _xmppClientMain(jid){
     var self = this;
 
     var dialog = WM.register(jid, $('<div>'), {
-        width: 200,
-        height: 500,
+        minWidth: 240,
+        minHeight: 400,
+        width: 241,
+        height: 401,
     });
 
     // add status changer
@@ -109,7 +111,34 @@ function _xmppClientMain(jid){
             .append($('<span>').addClass('caret'))
             .appendTo(dlgStatusChanger)
     ;
-    $('<ul>', {role: 'menu'}).addClass('dropdown-menu').appendTo(
+    $('<ul>', {role: 'menu'})
+        .addClass('dropdown-menu')
+        .appendTo(dlgStatusChanger)
+    ;
+//    dlgStatusChanger.appendTo(dialog.dialog);
+
+    
+    // add list
+    var dlgContactList = $('<select>').addClass('form-control');
+
+
+
+    // xmpp client status function
+    function _refreshStatus(json){
+        console.log(json);
+    };
+    
+    setInterval(function(){
+        $.ajax({
+            url: '/xmpp',
+            data: {
+                jid: jid,
+                action: 'show',
+            },
+        })
+            .done(_refreshStatus)
+        ;
+    }, 2000);
 
 
     return this;
