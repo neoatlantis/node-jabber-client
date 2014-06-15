@@ -2,6 +2,8 @@ var xmppClient = function(){
     return new _xmppClientLogin();
 };
 
+//////////////////////////////////////////////////////////////////////////////
+
 function _xmppClientLogin(){
     var self = this;
     var dialog = WM.register('登录XMPP', $('<div>'), {
@@ -57,7 +59,6 @@ function _xmppClientLogin(){
             click: function(){
                 var jid = $('#xmpp-jid-' + dialog.uuid).val(),
                     pwd = $('#xmpp-password-' + dialog.uuid).val();
-                alert('hello');
                 $.ajax({
                     url: '/xmpp',
                     type: 'get',
@@ -65,9 +66,14 @@ function _xmppClientLogin(){
                         jid: jid,
                         password: pwd,
                         action: 'login',
-                    }
+                    },
+                    dataType: 'json',
                 })
-                    .done()
+                    .done(function(json){
+                        if(true == json.result)
+                            return new _xmppClientMain(jid);
+                        $.notify('登录失败。', 'danger');
+                    })
                     .always(dialog.close)
                 ;
             },
@@ -79,5 +85,20 @@ function _xmppClientLogin(){
     ]);
 
     dialog.show();
+    return this;
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+function _xmppClientMain(jid){
+    var self = this;
+
+    var dialog = WM.register(jid, $('<div>'), {
+        width: 450,
+        height: 230,
+    });
+
+    dialog.dialog.text(jid);
+
     return this;
 };
