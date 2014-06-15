@@ -55,6 +55,21 @@ function _xmppClientLogin(){
         {
             text: '登录',
             click: function(){
+                var jid = $('#xmpp-jid-' + dialog.uuid).val(),
+                    pwd = $('#xmpp-password-' + dialog.uuid).val();
+                alert('hello');
+                $.ajax({
+                    url: '/xmpp',
+                    type: 'get',
+                    data: {
+                        jid: jid,
+                        password: pwd,
+                        action: 'login',
+                    }
+                })
+                    .done()
+                    .always(dialog.close)
+                ;
             },
         },
         {
