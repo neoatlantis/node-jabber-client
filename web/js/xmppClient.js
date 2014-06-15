@@ -7,6 +7,7 @@ function _xmppClient(){
     var dialog = WM.register('登录XMPP', $('<div>'), {
         width: 450,
         height: 230,
+        dialogClass: 'no-close',
     });
 
     function _drawLoginForm(){
