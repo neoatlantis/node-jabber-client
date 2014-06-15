@@ -13,17 +13,18 @@ WM._newTaskBarButton = function(managedDialog){
             .appendTo($('#nav-switches'))
         ;
 
-        function onTaskBarButtonFocus(){
+        var thisButton = $(taskBarButtonItem),
+            thisDialog = managedDialog.dialog,
+            thisDialogAll = thisDialog.parent('[role="dialog"]');
+
+        function onDialogFocus(){
             $('#nav-switches').children('li').removeClass('active');
-            $(taskBarButtonItem).addClass('active');
+            thisButton.addClass('active');
         };
-        managedDialog.dialog.on('dialogfocus', onTaskBarButtonFocus);
+        thisDialog.on('dialogfocus', onDialogFocus);
+        thisDialogAll.on('click', onDialogFocus);
 
         function onTaskBarButtonClick(){
-            var thisButton = $(taskBarButtonItem),
-                thisDialog = managedDialog.dialog,
-                thisDialogAll = thisDialog.parent('[role="dialog"]');
-
             var wasActive = thisButton.hasClass('active');
             $('#nav-switches').children('li').removeClass('active');                
             
