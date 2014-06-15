@@ -94,11 +94,23 @@ function _xmppClientMain(jid){
     var self = this;
 
     var dialog = WM.register(jid, $('<div>'), {
-        width: 450,
-        height: 230,
+        width: 200,
+        height: 500,
     });
 
-    dialog.dialog.text(jid);
+    // add status changer
+    var dlgStatusChanger = $('<div>').addClass('btn-group'),
+        dlgStatusChangerButton = $('<button>', {
+            type: 'button',
+            'data-toggle': 'dropdown',
+        })
+            .addClass('btn btn-default btn-xs dropdown-toggle')
+            .text('当前状态[在线]')
+            .append($('<span>').addClass('caret'))
+            .appendTo(dlgStatusChanger)
+    ;
+    $('<ul>', {role: 'menu'}).addClass('dropdown-menu').appendTo(
+
 
     return this;
 };
