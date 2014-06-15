@@ -1,50 +1,67 @@
 WM = {}; // Windows Manager
 
-WM.register = function(title, div){
-    var handle = COMMON.uuid();
-
-    div
-        .attr('title', title)
-        .attr('data-uuid', handle)
-        .appendTo('body')
-        .dialog()
-        .on("dialogclose", function(event, ui){
-            $('[data-uuid="' + handle + '"]').remove();
-        });
-    ;
-
-    $('<li>')
-        .attr('data-uuid', handle)
-        .append($('<a>', {href: '#'})
-            .text(title)
-            .prepend($('<span>')
-                .addClass('glyphicon glyphicon-star')
+WM._newTaskBarButton = function(managedDialog){
+    return new (function taskBarButton(){
+        var self = this;
+        var taskBarButtonItem = $('<li>')
+            .append($('<a>', {href: '#'})
+                .text(managedDialog.title)
+                .prepend($('<span>')
+                    .addClass('glyphicon glyphicon-star')
+                )
             )
-        )
-        .click(function(){
-            var uuid = $(this).attr('data-uuid');
-            $('#nav-switches').children('li').each(function(){
-                var thisUUID = $(this).attr('data-uuid');
-                if(uuid != thisUUID) return $(this).removeClass('active');
-                
-                var thisDialog = $('div[data-uuid="' + uuid + '"]');
-                if($(this).hasClass('active')){
-                    // hide this dialog
-                    $(this).removeClass('active');
-                    thisDialog.hide();
-                } else {
-                    // show this dialog
-                    $(this).addClass('active');
-                    thisDialog
-                        .show()
-                        .dialog('moveToTop')
-                    ;
-                };
-            });
-        })
-        .click()
-        .appendTo($('#nav-switches'))
-    ;
+            .appendTo($('#nav-switches'))
+        ;
+
+        taskBarButtonItem.click(function(){
+            var thisButton = $(taskBarButtonItem),
+                thisDialog = managedDialog.dialog;
+
+            var wasActive = thisButton.hasClass('active');
+            $('#nav-switches').children('li').removeClass('active');                
+            
+            if(wasActive){
+                // hide this dialog
+                thisDialog.hide();
+            } else {
+                // show this dialog
+                thisButton.addClass('active');
+                thisDialog
+                    .show()
+                    .dialog('moveToTop')
+                ;
+            };
+        });
+
+        managedDialog.dialog.on('dialogclose', function(){
+            $(taskBarButtonItem).remove();
+        });
+
+        return this;
+    })();
+};
+
+WM.register = function(_title, _div){
+    var theManagedDialog = new (function wmDialogRegister(title, div){
+        var self = this;
+
+        this.uuid = COMMON.uuid();
+        this.title = title;
+        this.dialog = div
+            .attr('title', self.title)
+            .attr('data-uuid', self.uuid)
+            .appendTo('body')
+            .on("dialogclose", function(event, ui){
+                $('[data-uuid="' + handle + '"]').remove();
+            })
+            .dialog()
+        ;
+
+        return this;
+    })(_title, _div);
+
+    WM._newTaskBarButton(theManagedDialog);
+    return theManagedDialog;
 };
 
 setInterval(function(){
