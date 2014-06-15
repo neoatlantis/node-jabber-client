@@ -57,6 +57,10 @@ function _xmppClient(){
                 click: function(){
                 },
             },
+            {
+                text: '取消',
+                click: dialog.close,
+            }
         ]);
 
     };

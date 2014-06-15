@@ -13,6 +13,12 @@ WM._newTaskBarButton = function(managedDialog){
             .appendTo($('#nav-switches'))
         ;
 
+        function onTaskBarButtonFocus(){
+            $('#nav-switches').children('li').removeClass('active');
+            $(taskBarButtonItem).addClass('active');
+        };
+        managedDialog.dialog.on('dialogfocus', onTaskBarButtonFocus);
+
         function onTaskBarButtonClick(){
             var thisButton = $(taskBarButtonItem),
                 thisDialog = managedDialog.dialog,
@@ -28,7 +34,7 @@ WM._newTaskBarButton = function(managedDialog){
                 // show this dialog
                 thisDialogAll.show();
                 thisButton.addClass('active');
-                thisDialog .dialog('moveToTop') ;
+                thisDialog.dialog('moveToTop') ;
             };
         };
         taskBarButtonItem.click(onTaskBarButtonClick);
@@ -53,9 +59,7 @@ WM.register = function(_title, _div, _conf){
             .attr('title', title)
             .attr('data-uuid', self.uuid)
             .appendTo('body')
-            .on("dialogclose", function(event, ui){
-                $(div).remove();
-            })
+            .on("dialogclose", $(div).remove)
             .dialog(conf)
         ;
 
@@ -70,8 +74,12 @@ WM.register = function(_title, _div, _conf){
             if(!v) return buttons;
             buttons = v;
             $(div).dialog('option', 'buttons', v);
-            $('button').addClass('btn');
+            $('button').addClass('btn btn-default');
             return buttons;
+        };
+
+        this.close = function(){
+            self.dialog.dialog('close');
         };
 
         return this;
