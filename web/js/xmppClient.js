@@ -107,7 +107,11 @@ function _xmppClientMain(jid){
             'data-toggle': 'dropdown',
         })
             .addClass('btn btn-default btn-xs dropdown-toggle')
-            .text('当前状态[在线]')
+            .text('当前状态')
+            .append($('<span>', {name: 'online-status'})
+                .addClass('label label-default')
+                .text('离线')
+            )
             .append($('<span>').addClass('caret'))
             .appendTo(dlgStatusChanger)
     ;
@@ -122,10 +126,30 @@ function _xmppClientMain(jid){
     var dlgContactList = $('<select>').addClass('form-control');
 
 
+    ///////////////////////// Refreshing Functions //////////////////////
 
-    // xmpp client status function
+    var func = {};
+
+    func.setOnlineStatus = function(v){
+        var statusDisplay = $(dialog._dialogSelector).find('[name="online-status"]');
+        var map = {
+            'PREAUTH': ['label-default', '离线'],
+            'AUTH': ['label-warning', '登录中'],
+            'AUTHED': ['label-info', '已登录'],
+            'BIND': ['label-info', '初始化'],
+            'SESSION': ['label-primary', '初始化'],
+            'ONLINE': ['label-success', '已登录'],
+        };
+        statusDisplay.removeClass('label-default label-warning label-info label-primary label-success');
+        statusDisplay.addClass(map[v][0]).text(map[v][1]);
+    };
+
+
+    /* get new updates and refresh */
     function _refreshStatus(json){
-        console.log(json);
+        var client = json.client || {};
+
+        func.setOnlineStatus(client.status || 'PREAUTH');
     };
     
     setInterval(function(){
@@ -135,6 +159,7 @@ function _xmppClientMain(jid){
                 jid: jid,
                 action: 'show',
             },
+            dataType: 'json',
         })
             .done(_refreshStatus)
         ;
