@@ -123,7 +123,18 @@ function _xmppClientMain(jid){
 
     
     // add list
-    var dlgContactList = $('<select>').addClass('form-control');
+    var dlgContactDiv = $('<div>')
+        .css('overflow-y', 'scroll')
+        .css('overflow-x', 'hidden')
+        .css('height', '80%')
+        .appendTo(dialog._dialogSelector)
+    ;
+    var dlgContactList = $('<div>', {name: "buddy-list"})
+        .addClass('list-group')
+        .appendTo(dlgContactDiv)
+    ;
+
+    dlgContactDiv.appendTo(dialog._dialogSelector);
 
 
     ///////////////////////// Refreshing Functions //////////////////////
@@ -142,6 +153,9 @@ function _xmppClientMain(jid){
         };
         statusDisplay.removeClass('label-default label-warning label-info label-primary label-success');
         statusDisplay.addClass(map[v][0]).text(map[v][1]);
+    };
+
+    func.setBuddyList = function(v){
     };
 
 
