@@ -15,15 +15,14 @@ WM._newTaskBarButton = function(_managedDialog){
         ;
 
         var thisButtonSelector = '[data-wmbtn="' + managedDialog.uuid + '"]';
-        var thisDialog = $(managedDialog._dialogSelector),
-            thisDialogAll = thisDialog.parent('[role="dialog"]');
+        var thisDialog = $(managedDialog._dialogSelector);
 
         function onDialogFocus(){
             $('#nav-switches').children('li').removeClass('active');
             $(thisButtonSelector).addClass('active');
         };
         thisDialog.on('dialogfocus', onDialogFocus);
-        thisDialogAll.on('click', onDialogFocus);
+        thisDialog.on('click', onDialogFocus);
 
         function onTaskBarButtonClick(){
             var wasActive = $(thisButtonSelector).hasClass('active');
@@ -31,10 +30,10 @@ WM._newTaskBarButton = function(_managedDialog){
             
             if(wasActive){
                 // hide this dialog
-                thisDialogAll.hide();
+                managedDialog.hide();
             } else {
                 // show this dialog
-                thisDialogAll.show();
+                managedDialog.show();
                 $(thisButtonSelector).addClass('active');
                 thisDialog.dialog('moveToTop') ;
             };
@@ -42,9 +41,9 @@ WM._newTaskBarButton = function(_managedDialog){
         taskBarButtonItem.click(onTaskBarButtonClick);
         onTaskBarButtonClick();
 
-        managedDialog.dialog.on('dialogclose', function(){
+/*        $(managedDialog._dialogSelector).on('dialogclose', function(){
             $(thisButtonSelector).remove();
-        });
+        });*/
 
         return this;
     })(_managedDialog);
@@ -53,7 +52,6 @@ WM._newTaskBarButton = function(_managedDialog){
 WM.register = function(_title, _div, _conf){
     var theManagedDialog = new (function(title, div, conf){
         var self = this;
-        console.log(arguments);
 
         var title = title, buttons = [];
         conf.autoOpen = false;
@@ -86,8 +84,12 @@ WM.register = function(_title, _div, _conf){
             return buttons;
         };
 
-        this.close = function(){
+        this.unload = function(){
             $(self._dialogSelector).dialog('close').dialog('destroy').remove();
+        };
+
+        this.hide = function(){
+            $(self._dialogSelector).dialog('close');
         };
 
         this.show = function(){ 

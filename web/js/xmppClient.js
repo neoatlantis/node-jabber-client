@@ -80,7 +80,7 @@ function _xmppClientLogin(){
         },
         {
             text: '取消',
-            click: dialog.close,
+            click: dialog.unload,
         }
     ]);
 
