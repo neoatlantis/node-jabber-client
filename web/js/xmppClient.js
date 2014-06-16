@@ -101,7 +101,7 @@ function _xmppClientMain(jid){
     });
 
     // add status changer
-    var dlgStatusChanger = $('<div>').addClass('btn-group'),
+    var dlgHeadRow = $('<div>').addClass('btn-group'),
         dlgStatusChangerButton = $('<button>', {
             type: 'button',
             'data-toggle': 'dropdown',
@@ -113,13 +113,16 @@ function _xmppClientMain(jid){
                 .text('离线')
             )
             .append($('<span>').addClass('caret'))
-            .appendTo(dlgStatusChanger)
+            .appendTo(dlgHeadRow)
     ;
-    $('<ul>', {role: 'menu'})
+    var dlgStatusChangerMenu = $('<ul>', {role: 'menu'})
         .addClass('dropdown-menu')
-        .appendTo(dlgStatusChanger)
+        .appendTo(HeadRow)
     ;
-    dlgStatusChanger.appendTo(dialog._dialogSelector);
+    dlgHeadRow.appendTo(dialog._dialogSelector);
+
+    // add status changer menu
+
 
     
     // add list
@@ -127,6 +130,7 @@ function _xmppClientMain(jid){
         .css('overflow-y', 'scroll')
         .css('overflow-x', 'hidden')
         .css('height', '80%')
+        .css('width', '100%')
         .appendTo(dialog._dialogSelector)
     ;
     var dlgContactList = $('<div>', {name: "buddy-list"})
