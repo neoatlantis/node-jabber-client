@@ -92,7 +92,7 @@ function _xmppClientLogin(){
 
 function _xmppClientMain(jid){
     var self = this;
-    var func = {};
+    var func = {}, died = false;
 
     var dialog = WM.register(jid, $('<div>'), {
         minWidth: 240,
@@ -172,6 +172,7 @@ function _xmppClientMain(jid){
         })
             .always(dialog.unload)
         ;
+        died = true;
     };
 
     func.setOnlineStatus = function(v){
@@ -189,17 +190,38 @@ function _xmppClientMain(jid){
     };
 
     func.setBuddyList = function(v){
+        // group name -> jid ->
+        if(false === v) return; // not retrived, but may not empty.
+        var list = $(dialog._dialogSelector).find('[name="buddy-list"]');
+        // remove the no longer existing entry and insert new entries
+        var jids = [];
+        for(var groupName in v){
+            for(var jid in v[groupName]){
+                if(list.find('[data-jid="' + jid + '"]').length > 0) continue;
+                list.append($('<a>', {href: '#'}).addClass('list-group-item')
+                    .text(jid)
+                    .attr('data-jid', jid)
+                );
+                console.log(groupName, jid);
+            };
+        };
+        /*
+        list.find("[data-jid]").each(function(){
+            if(jids.indexOf($(this).attr('data-jid')) < 0) $(this).remove();
+        });*/
     };
 
 
     /* get new updates and refresh */
     function _refreshStatus(json){
-        var client = json.client || {};
+        var client = json.client || {},
+            roster = json.roster || false;
 
         func.setOnlineStatus(client.status || 'PREAUTH');
+        func.setBuddyList(roster);
     };
     
-    setInterval(function(){
+    var _ajaxCall = function(){
         $.ajax({
             url: '/xmpp',
             data: {
@@ -209,9 +231,19 @@ function _xmppClientMain(jid){
             dataType: 'json',
         })
             .done(_refreshStatus)
+            .always(function(){
+                if(!died) setTimeout(_ajaxCall, 2000);
+            })
         ;
-    }, 2000);
+    };
+    _ajaxCall();
 
 
     return this;
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+function _xmppClientChat(localJID, buddyJID){
+    
 };
