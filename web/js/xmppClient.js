@@ -92,6 +92,7 @@ function _xmppClientLogin(){
 
 function _xmppClientMain(jid){
     var self = this;
+    var func = {};
 
     var dialog = WM.register(jid, $('<div>'), {
         minWidth: 240,
@@ -117,11 +118,29 @@ function _xmppClientMain(jid){
     ;
     var dlgStatusChangerMenu = $('<ul>', {role: 'menu'})
         .addClass('dropdown-menu')
-        .appendTo(HeadRow)
+        .appendTo(dlgHeadRow)
     ;
     dlgHeadRow.appendTo(dialog._dialogSelector);
 
     // add status changer menu
+    var i = function(desc, doer){
+        dlgStatusChangerMenu.append($('<li>')
+            .append($('<a>', {href: '#'})
+                .text(desc)
+                .click(func.logout)
+            )
+        );
+    };
+    i('在线');
+    i('离线');
+
+
+    // add exit button
+    dlgHeadRow.append($('<button>', {type: 'button'})
+        .addClass('btn btn-default btn-xs')
+        .text('退出')
+        .click(function(){func.logout();})
+    );
 
 
     
@@ -142,8 +161,18 @@ function _xmppClientMain(jid){
 
 
     ///////////////////////// Refreshing Functions //////////////////////
-
-    var func = {};
+    func.logout = function(){
+        $.ajax({
+            url: '/xmpp',
+            type: 'get',
+            data: {
+                jid: jid,
+                action: 'logout',
+            },
+        })
+            .always(dialog.unload)
+        ;
+    };
 
     func.setOnlineStatus = function(v){
         var statusDisplay = $(dialog._dialogSelector).find('[name="online-status"]');
