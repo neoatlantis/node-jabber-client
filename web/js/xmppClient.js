@@ -74,7 +74,7 @@ function _xmppClientLogin(){
                             return new _xmppClientMain(jid);
                         $.notify('登录失败。', 'danger');
                     })
-                    .always(dialog.close)
+                    .always(dialog.unload)
                 ;
             },
         },

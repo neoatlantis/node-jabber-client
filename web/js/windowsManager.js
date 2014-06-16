@@ -36,14 +36,14 @@ function wmDialogRegister(title, div, conf){
     };
 
     this.unload = function(){
-        $(self._dialogSelector).dialog('close').dialog('destroy').remove();
+        $(self._dialogSelector).dialog('destroy').remove();
         self.emit('unload');
     };
 
     this.hide = function(){
         $(self._dialogSelector).dialog('close');
-        self.emit('hide');
     };
+    $(self._dialogSelector).on('dialogclose', function(){self.emit('hide');});
 
     this.show = function(){ 
         $(self._dialogSelector).dialog('open');
