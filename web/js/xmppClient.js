@@ -281,7 +281,7 @@ function _xmppChatDialog(localJID, buddyJID){
     ;
     
     $('<textarea>',{
-        width: '98%',
+        width: '100%',
         name: 'user-input',
     }).css({
         resize: 'none',
@@ -341,7 +341,12 @@ function _xmppChatDialog(localJID, buddyJID){
             dataType: 'json',
             type: 'post',
             data: {
+                action: 'send',
+                jid: localJID,
                 recv: buddyJID,
+                message: 
+                    $(dialog._dialogSelector)
+                        .find('[name="user-input"]').val(),
             },
         })
             .done()

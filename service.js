@@ -121,6 +121,8 @@ function _processXMPPCore(querystring, req, res){
         'show',
         'login',
         'logout',
+        'send',
+        'retrive',
     ].indexOf(action) < 0){ 
         res.writeHead(400);
         res.end('invalid action: ' + action);
@@ -180,9 +182,10 @@ function _processXMPP(req, res){
     var self = this;
 
     var qs = '';
-    if('get' == req.method.toLowerCase())
-        qs = $.node.querystring.parse($.node.url.parse(req.url).query);
-    else if('post' == req.method.toLowerCase()){
+    if('get' == req.method.toLowerCase()){
+        qs = $.node.url.parse(req.url).query;
+        new _processXMPPCore(qs, req, res);
+    } else if('post' == req.method.toLowerCase()){
         req.on('data', function(chunk){ if(chunk) qs += chunk; });
         req.on('end', function(chunk){
             if(chunk) qs += chunk;
