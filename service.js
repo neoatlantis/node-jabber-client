@@ -104,22 +104,19 @@ function _proxy(req, res, options){
 
 //////////////////////////////////////////////////////////////////////////////
 var _xmppClients = {};
-function _processXMPP(req, res){
-    var self = this;
-
-    var get = $.node.querystring.parse($.node.url.parse(req.url).query);
-    
+function _processXMPPCore(querystring, req, res){
+    var qs = $.node.querystring.parse(querystring);
     try{
-        var jid = new $.node.xmpp.JID(get.jid),
+        var jid = new $.node.xmpp.JID(qs.jid),
             bareJID = jid.bare().toString();
         if(!_xmppClients[bareJID]) _xmppClients[bareJID] = $.xmpp(bareJID);
     } catch(e){
         res.writeHead(400);
-        res.end('invalid jid: ' + get.jid);
+        res.end('invalid jid: ' + qs.jid);
         return;
     };
 
-    var action = get.action || 'show';
+    var action = qs.action || 'show';
     if([
         'show',
         'login',
@@ -133,25 +130,68 @@ function _processXMPP(req, res){
         jid: bareJID,
     };
 
+    var theClient = _xmppClients[bareJID];
     switch(action){
         case 'logout':
-            output.result = _xmppClients[bareJID].logout();
+            output.result = theClient.logout();
             break;
         case 'login':
-            var newPassword = get.password || null;
-            output.result = _xmppClients[bareJID].login(newPassword, true); // TODO presence
+            var newPassword = qs.password || null;
+            output.result = theClient.login(newPassword, true); // TODO presence
             break;
         case 'send':
+            /* send message */
+
+            var receiverJID = qs.recv || null,
+                message = qs.message, 
+                useReceipt = Boolean(qs['receipt']);
+
+            if(!receiverJID){
+                output.result = false;
+                break;
+            };
+            
+            var attr = {};
+            if(useReceipt){ // XEP-0184 Message Delivery Receipts 
+                var receiptID = 
+                    'neoatlan-' + $.crypto.random.bytes(10).toString('hex');
+                attr.id = receiptID;
+                attr['request-receipt'] = true;
+                output['receipt'] = receiptID;
+            };
+
+            theClient.send(receiverJID, message, attr);
+            output.result = true;
+            output.receiver = receiverJID;
             break;
         case 'retrive':
             break;
         case 'show':
         default:
-            output = _xmppClients[bareJID].report();
+            output = theClient.report();
             break;
     };
 
     res.writeHead(200);
     res.end(JSON.stringify(output));
+};
+
+function _processXMPP(req, res){
+    var self = this;
+
+    var qs = '';
+    if('get' == req.method.toLowerCase())
+        qs = $.node.querystring.parse($.node.url.parse(req.url).query);
+    else if('post' == req.method.toLowerCase()){
+        req.on('data', function(chunk){ if(chunk) qs += chunk; });
+        req.on('end', function(chunk){
+            if(chunk) qs += chunk;
+            new _processXMPPCore(qs, req, res);
+        });
+    } else {
+        req.writeHead(405);
+        req.end();
+    }
+    
     return this;
 };

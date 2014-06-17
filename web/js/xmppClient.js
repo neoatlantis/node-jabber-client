@@ -335,6 +335,17 @@ function _xmppChatDialog(localJID, buddyJID){
     };
 
     this.sendMessage = function(){
+        
+        $.ajax({
+            url: '/xmpp',
+            dataType: 'json',
+            type: 'post',
+            data: {
+                recv: buddyJID,
+            },
+        })
+            .done()
+        ;
     };
 
     this.unload = function(){
