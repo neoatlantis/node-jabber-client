@@ -259,8 +259,8 @@ function _xmppChatDialog(localJID, buddyJID){
         width: 501,
         height: 401,
         buttons: [
-            {text: '关闭', click: self.unload},
-            {text: '发送', click: self.sendMessage},
+            {text: '关闭', click: function(){self.unload();}},
+            {text: '发送', click: function(){self.sendMessage();}},
         ]
     });
 
@@ -290,7 +290,7 @@ function _xmppChatDialog(localJID, buddyJID){
         bottom: '0',
         height: '20%',
     }).appendTo(dialog._dialogSelector)
-      .bind('keypress', self.onTextareaKeypress );
+      .bind('keypress', this.onTextareaKeypress );
 
 
     //////////////////////////////////////////////////////////////////////
@@ -337,7 +337,7 @@ function _xmppChatDialog(localJID, buddyJID){
     this.sendMessage = function(){
     };
 
-    func.unload = function(){
+    this.unload = function(){
         dialog.unload();
         _xmppChatDialogUnregister(localJID, buddyJID);
     };
