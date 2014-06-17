@@ -243,6 +243,18 @@ function _xmppClientMain(jid){
 
 //////////////////////////////////////////////////////////////////////////////
 
-function _xmppClientChat(localJID, buddyJID){
-    
+var _xmppChatDialogs = {};
+function _xmppChatDialog(localJID, buddyJID){
+};
+function _xmppChatDialogGenerate(localJID, buddyJID){
+    if(_xmppChatDialogs[localJID] && _xmppChatDialogs[localJID][buddyJID])
+        return _xmppChatDialogs[localJID][buddyJID];
+    var newDialog = new _xmppChatDialog(localJID, buddyJID);
+    if(!_xmppChatDialogs[localJID]) _xmppChatDialogs[localJID] = {};
+    _xmppChatDialogs[localJID][buddyJID] = newDialog;
+    return newDialog;
+};
+function _xmppChatDialogUnregister(localJID, buddyJID){
+    if(!_xmppChatDialogs[localJID]) return;
+    delete _xmppChatDialogs[localJID][buddyJID];
 };
