@@ -294,21 +294,20 @@ function _xmppChatDialog(localJID, buddyJID){
 
 
     //////////////////////////////////////////////////////////////////////
-    function addHistory(isLocal, message, time){
+    function addHistory(isLocal, message, config){
         var outerdiv = $('<div>').addClass('messagePiece');
         var prompting = $('<div>').css('font-weight', 'bold');
         
         var usertext = $('<div>').text(message);
-        var time = new Date(); 
+        var time = (config.time?new Date(config.time):new Date());
 
-        usertext.html( usertext.html().replace(new RegExp("\n",'g'),"<br />") );
+        usertext.html( usertext.html().replace(/\n/g, "<br />") );
 
         if(Boolean(isLocal)){
-            outerdiv.attr('id','local-' + msgid);
+            if(config.receipt)
+                outerdiv.attr('data-receipt', config.receipt);
             prompting.text('我  ' + time.toLocaleString() )
-                .css({
-                'color': '#11aa11',
-                })
+                .css('color', '#11aa11')
             ;
         } else {
             prompting.text(buddyJID + '  ' + time.toLocaleString() )
@@ -335,6 +334,11 @@ function _xmppChatDialog(localJID, buddyJID){
     };
 
     this.sendMessage = function(){
+        var message = $(dialog._dialogSelector)
+                .find('[name="user-input"]').val(),
+            now = new Date();
+
+        function _onSent(){ addHistory(true, message, now); };
         
         $.ajax({
             url: '/xmpp',
@@ -344,12 +348,10 @@ function _xmppChatDialog(localJID, buddyJID){
                 action: 'send',
                 jid: localJID,
                 recv: buddyJID,
-                message: 
-                    $(dialog._dialogSelector)
-                        .find('[name="user-input"]').val(),
+                message: message,
             },
         })
-            .done()
+            .done(_onSent)
         ;
     };
 
