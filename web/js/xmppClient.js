@@ -196,12 +196,17 @@ function _xmppClientMain(jid){
         // remove the no longer existing entry and insert new entries
         var jids = [];
         for(var groupName in v){
-            for(var jid in v[groupName]){
-                jids.push(jid);
-                if(list.find('[data-jid="' + jid + '"]').length > 0) continue;
+            for(var j in v[groupName]){
+                jids.push(j);
+                if(list.find('[data-jid="' + j + '"]').length > 0) continue;
                 list.append($('<a>', {href: '#'}).addClass('list-group-item')
-                    .text(jid)
-                    .attr('data-jid', jid)
+                    .text(j)
+                    .attr('data-jid', j)
+                    .click((function(localJID, buddyJID){
+                        return function(){
+                            _xmppChatDialogGenerate(localJID, buddyJID);
+                        };
+                    })(jid, j))
                 );
             };
         };
@@ -243,16 +248,34 @@ function _xmppClientMain(jid){
 
 //////////////////////////////////////////////////////////////////////////////
 
-var _xmppChatDialogs = {};
+var _xmppChatDialogs = {}; // for elimating repeated dialogs
 function _xmppChatDialog(localJID, buddyJID){
+    // the dialog class
+    var self = this;
+        
+    var dialog = WM.register('与 ' + buddyJID + ' 聊天', $('<div>'), {
+        minWidth: 500,
+        minHeight: 400,
+        width: 501,
+        height: 401,
+    });
+
+    this.activate = function(){
+        dialog.show();
+        return self;
+    };
+
+    return this;
 };
+
+
 function _xmppChatDialogGenerate(localJID, buddyJID){
     if(_xmppChatDialogs[localJID] && _xmppChatDialogs[localJID][buddyJID])
-        return _xmppChatDialogs[localJID][buddyJID];
+        return _xmppChatDialogs[localJID][buddyJID].activate();
     var newDialog = new _xmppChatDialog(localJID, buddyJID);
     if(!_xmppChatDialogs[localJID]) _xmppChatDialogs[localJID] = {};
     _xmppChatDialogs[localJID][buddyJID] = newDialog;
-    return newDialog;
+    return newDialog.activate();
 };
 function _xmppChatDialogUnregister(localJID, buddyJID){
     if(!_xmppChatDialogs[localJID]) return;
