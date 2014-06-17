@@ -251,29 +251,97 @@ function _xmppClientMain(jid){
 var _xmppChatDialogs = {}; // for elimating repeated dialogs
 function _xmppChatDialog(localJID, buddyJID){
     // the dialog class
-    var self = this;
+    var self = this, func = {};
         
     var dialog = WM.register('与 ' + buddyJID + ' 聊天', $('<div>'), {
         minWidth: 500,
         minHeight: 400,
         width: 501,
         height: 401,
+        buttons: [
+            {text: '关闭', click: self.unload},
+            {text: '发送', click: self.sendMessage},
+        ]
     });
 
     var dialogHistory = $('<div>').appendTo(dialog._dialogSelector)
+        .attr('name', 'history')
         .attr('overflow-x', 'hidden')
         .attr('overflow-y', 'scroll')
-        .css('height', '80%')
-        .css('width', '100%')
+        .css({
+            position: 'absolute',
+            top: '3px',
+            bottom: '22%',
+            padding: '2px',
+            left: '1px',
+            right: '1px',
+            width: '98%',
+            overflow: 'auto',
+        })
     ;
+    
+    $('<textarea>',{
+        width: '98%',
+        name: 'user-input',
+    }).css({
+        resize: 'none',
+        position: 'absolute',
+        left: '0',
+        bottom: '0',
+        height: '20%',
+    }).appendTo(dialog._dialogSelector)
+      .bind('keypress', self.onTextareaKeypress );
 
 
     //////////////////////////////////////////////////////////////////////
+    function addHistory(isLocal, message, time){
+        var outerdiv = $('<div>').addClass('messagePiece');
+        var prompting = $('<div>').css('font-weight', 'bold');
+        
+        var usertext = $('<div>').text(message);
+        var time = new Date(); 
+
+        usertext.html( usertext.html().replace(new RegExp("\n",'g'),"<br />") );
+
+        if(Boolean(isLocal)){
+            outerdiv.attr('id','local-' + msgid);
+            prompting.text('我  ' + time.toLocaleString() )
+                .css({
+                'color': '#11aa11',
+                })
+            ;
+        } else {
+            prompting.text(buddyJID + '  ' + time.toLocaleString() )
+                .css({
+                    'color': '#0000cc',
+                })
+            ;
+        }
+
+        outerdiv
+            .append(prompting)
+            .append(usertext)
+            .appendTo($(dialog._dialogSelector).find('[name="history"]'))
+        ;
+    };
 
     this.activate = function(){
         dialog.show();
         return self;
     };
+
+    this.onTextareaKeypress = function(e){
+        if(e.ctrlKey) if(e.which == 10 || e.which == 13) self.sendMessage();
+    };
+
+    this.sendMessage = function(){
+    };
+
+    func.unload = function(){
+        dialog.unload();
+        _xmppChatDialogUnregister(localJID, buddyJID);
+    };
+
 
     return this;
 };
