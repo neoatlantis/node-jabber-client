@@ -141,6 +141,10 @@ function _processXMPP(req, res){
             var newPassword = get.password || null;
             output.result = _xmppClients[bareJID].login(newPassword, true); // TODO presence
             break;
+        case 'send':
+            break;
+        case 'retrive':
+            break;
         case 'show':
         default:
             output = _xmppClients[bareJID].report();
