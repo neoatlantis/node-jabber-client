@@ -260,6 +260,16 @@ function _xmppChatDialog(localJID, buddyJID){
         height: 401,
     });
 
+    var dialogHistory = $('<div>').appendTo(dialog._dialogSelector)
+        .attr('overflow-x', 'hidden')
+        .attr('overflow-y', 'scroll')
+        .css('height', '80%')
+        .css('width', '100%')
+    ;
+
+
+    //////////////////////////////////////////////////////////////////////
+
     this.activate = function(){
         dialog.show();
         return self;
