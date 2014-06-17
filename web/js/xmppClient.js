@@ -294,6 +294,15 @@ function _xmppChatDialog(localJID, buddyJID){
 
 
     //////////////////////////////////////////////////////////////////////
+    function setHistory(entry, status){
+        var bgcolor = {
+            unknown: '#ffffff',
+            error: '#ffeeee',
+            wait: '#ffffee',
+            received: '#eeffee',
+        }[status || 'unknown'];
+        entry.css('background', bgcolor);
+    };
 
     function addHistory(isLocal, message, config){
         var outerdiv = $('<div>').addClass('messagePiece');
@@ -316,9 +325,9 @@ function _xmppChatDialog(localJID, buddyJID){
                     'color': '#0000cc',
                 })
             ;
-        }
+        };
 
-        outerdiv
+        return outerdiv
             .append(prompting)
             .append(usertext)
             .appendTo($(dialog._dialogSelector).find('[name="history"]'))
@@ -337,10 +346,20 @@ function _xmppChatDialog(localJID, buddyJID){
     this.sendMessage = function(){
         var message = $(dialog._dialogSelector)
                 .find('[name="user-input"]').val().trim(),
-            now = new Date();
+            now = new Date(),
+            requireReceipt = true;
 
-        function _onSent(){ 
-            addHistory(true, message, now); 
+        function _onSent(json){
+            var newEntry = addHistory(true, message, now), status = 'unknown';
+            if(false == json.result)
+                status = 'error';
+            else {
+                if(requireReceipt)
+                    status = 'wait';
+                else
+                    status = 'unknown';
+            };
+            setHistory(newEntry, status);
             $(dialog._dialogSelector).find('[name="user-input"]').val('');
         };
         
@@ -353,6 +372,7 @@ function _xmppChatDialog(localJID, buddyJID){
                 jid: localJID,
                 recv: buddyJID,
                 message: message,
+                receipt: (requireReceipt?'1':undefined),
             },
         })
             .done(_onSent)
