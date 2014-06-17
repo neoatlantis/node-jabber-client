@@ -197,18 +197,17 @@ function _xmppClientMain(jid){
         var jids = [];
         for(var groupName in v){
             for(var jid in v[groupName]){
+                jids.push(jid);
                 if(list.find('[data-jid="' + jid + '"]').length > 0) continue;
                 list.append($('<a>', {href: '#'}).addClass('list-group-item')
                     .text(jid)
                     .attr('data-jid', jid)
                 );
-                console.log(groupName, jid);
             };
         };
-        /*
         list.find("[data-jid]").each(function(){
             if(jids.indexOf($(this).attr('data-jid')) < 0) $(this).remove();
-        });*/
+        });
     };
 
 
