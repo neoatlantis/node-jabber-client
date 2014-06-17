@@ -294,6 +294,7 @@ function _xmppChatDialog(localJID, buddyJID){
 
 
     //////////////////////////////////////////////////////////////////////
+
     function addHistory(isLocal, message, config){
         var outerdiv = $('<div>').addClass('messagePiece');
         var prompting = $('<div>').css('font-weight', 'bold');
@@ -335,10 +336,13 @@ function _xmppChatDialog(localJID, buddyJID){
 
     this.sendMessage = function(){
         var message = $(dialog._dialogSelector)
-                .find('[name="user-input"]').val(),
+                .find('[name="user-input"]').val().trim(),
             now = new Date();
 
-        function _onSent(){ addHistory(true, message, now); };
+        function _onSent(){ 
+            addHistory(true, message, now); 
+            $(dialog._dialogSelector).find('[name="user-input"]').val('');
+        };
         
         $.ajax({
             url: '/xmpp',
