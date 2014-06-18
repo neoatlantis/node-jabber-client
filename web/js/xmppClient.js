@@ -351,7 +351,10 @@ function _xmppChatDialog(localJID, buddyJID){
             requireReceipt = true;
 
         function _onSent(json){
-            var newEntry = addHistory(true, message, now), status = 'unknown';
+            var newEntry = addHistory(true, message, {
+                    receipt: json.receipt,
+                }),
+                status = 'unknown';
             if(false == json.result)
                 status = 'error';
             else {
@@ -381,6 +384,20 @@ function _xmppChatDialog(localJID, buddyJID){
     };
 
     this.receiveMessage = function(msg){
+        switch(msg.type){
+            case 'chat-message':
+                break;
+            case 'chat-message-receipt':
+                var msgid = msg.id;
+                setHistory(
+                    $(dialog._dialogSelector)
+                        .find('[data-receipt="' + msgid + '"]'),
+                    'received'
+                );
+                break;
+            default:
+                break;
+        };
     };
 
     this.unload = function(){
@@ -412,11 +429,12 @@ function _xmppChatDialogAjax(){
         return setTimeout(_xmppChatDialogAjax, 1000);
 
     for(var _localJID in _xmppChatDialogs){
-        for(var _buddyJID in _xmppChatDialogs[localJID]){
+        for(var _buddyJID in _xmppChatDialogs[_localJID]){
             function _onDone(localJID, buddyJID){
                 return function(json){
                     var result = json.result;
                     if(!Boolean(result)) return;
+                    console.log(result);
                     if(
                         _xmppChatDialogs[localJID] && 
                         _xmppChatDialogs[localJID][buddyJID]
@@ -445,3 +463,4 @@ function _xmppChatDialogAjax(){
     };
     setTimeout(_xmppChatDialogAjax, 500);
 };
+_xmppChatDialogAjax();
