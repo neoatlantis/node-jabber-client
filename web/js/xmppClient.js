@@ -402,3 +402,37 @@ function _xmppChatDialogUnregister(localJID, buddyJID){
     if(!_xmppChatDialogs[localJID]) return;
     delete _xmppChatDialogs[localJID][buddyJID];
 };
+
+var _xmppChatDialogAjaxing = 0;
+function _xmppChatDialogAjax(){
+    if(_xmppChatDialogAjaxing > 0) 
+        return setTimeout(_xmppChatDialogAjax, 1000);
+
+    for(var _localJID in _xmppChatDialogs){
+        for(var _buddyJID in _xmppChatDialogs[localJID]){
+            function _onDone(localJID, buddyJID){
+                return function(json){
+                    var result = json.result;
+                    if(!Boolean(result)) return;
+                    
+                };
+            };
+            $.ajax({
+                url: '/xmpp',
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    jid: _localJID,
+                    action: 'retrive',
+                }, 
+            })
+                .done(_onDone(_localJID, _buddyJID))
+                .always(function(){
+                    _xmppChatDialogAjaxing -= 1;
+                })
+            ;
+            _xmppChatDialogAjaxing += 1;
+        };
+    };
+    setTimeout(_xmppChatDialogAjax, 500);
+};

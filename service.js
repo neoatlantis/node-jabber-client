@@ -167,6 +167,8 @@ function _processXMPPCore(querystring, req, res){
             output.receiver = receiverJID;
             break;
         case 'retrive':
+            var got = theClient.retrive() || null;
+            output.result = got;
             break;
         case 'show':
         default:
