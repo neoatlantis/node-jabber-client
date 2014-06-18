@@ -7,11 +7,11 @@
  */
 require('./lib');
 
-var port = process.argv[2] || 7777,
-    boshPort = 5280,
+var port = process.argv[2] || 7777;
+/*    boshPort = 5280,
     xmppBoshServer = $.node.bosh.start_bosh({
         port: boshPort,
-    });
+    });*/
 
 function mimeType(filename){
     var map = {
@@ -36,7 +36,7 @@ $.node.http.createServer(function(request, response) {
             'Content-Type': 'text/plain',
         };};
 
-    if('/bosh' == pathname) 
+    /*if('/bosh' == pathname) 
         return new _proxy(
             request,
             response, 
@@ -46,7 +46,7 @@ $.node.http.createServer(function(request, response) {
                 path: '/http-bind/',
                 method: 'POST'
             }
-        );
+        );*/
     if('/xmpp' == pathname) return new _processXMPP(request, response);
 
     // static file server

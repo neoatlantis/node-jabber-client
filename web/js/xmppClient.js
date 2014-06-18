@@ -294,11 +294,12 @@ function _xmppChatDialog(localJID, buddyJID){
 
 
     //////////////////////////////////////////////////////////////////////
+
     function setHistory(entry, status){
         var bgcolor = {
-            unknown: '#ffffff',
+            unknown: '#ffffee',
             error: '#ffeeee',
-            wait: '#ffffee',
+            wait: '#ffffcc',
             received: '#eeffee',
         }[status || 'unknown'];
         entry.css('background', bgcolor);
