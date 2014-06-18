@@ -306,6 +306,7 @@ function _xmppChatDialog(localJID, buddyJID){
     };
 
     function addHistory(isLocal, message, config){
+        if(!config) config = {};
         var outerdiv = $('<div>').addClass('messagePiece');
         var prompting = $('<div>').css('font-weight', 'bold');
         
@@ -386,6 +387,7 @@ function _xmppChatDialog(localJID, buddyJID){
     this.receiveMessage = function(msg){
         switch(msg.type){
             case 'chat-message':
+                setHistory(addHistory(false, msg.content), 'received');
                 break;
             case 'chat-message-receipt':
                 var msgid = msg.id;
