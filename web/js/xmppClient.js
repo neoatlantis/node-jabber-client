@@ -260,7 +260,7 @@ function _xmppChatDialog(localJID, buddyJID){
         height: 401,
         buttons: [
             {text: '关闭', click: function(){self.unload();}},
-            {text: '发送', click: function(){self.sendMessage();}},
+            {text: '发送(Ctrl+Enter)', click: function(){self.sendMessage();}},
         ]
     });
 
@@ -290,7 +290,7 @@ function _xmppChatDialog(localJID, buddyJID){
         bottom: '0',
         height: '20%',
     }).appendTo(dialog._dialogSelector)
-      .bind('keypress', this.onTextareaKeypress );
+      .bind('keypress', function(e){self.onTextareaKeypress(e);} );
 
 
     //////////////////////////////////////////////////////////////////////
@@ -328,12 +328,15 @@ function _xmppChatDialog(localJID, buddyJID){
                 })
             ;
         };
-
-        return outerdiv
+        
+        var appendTo = $(dialog._dialogSelector).find('[name="history"]');
+        outerdiv
             .append(prompting)
             .append(usertext)
-            .appendTo($(dialog._dialogSelector).find('[name="history"]'))
+            .appendTo(appendTo)
         ;
+        appendTo.scrollTop(appendTo[0].scrollHeight);
+        return outerdiv;
     };
 
     this.activate = function(){
