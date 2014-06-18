@@ -380,6 +380,9 @@ function _xmppChatDialog(localJID, buddyJID){
         ;
     };
 
+    this.receiveMessage = function(msg){
+    };
+
     this.unload = function(){
         dialog.unload();
         _xmppChatDialogUnregister(localJID, buddyJID);
@@ -414,7 +417,13 @@ function _xmppChatDialogAjax(){
                 return function(json){
                     var result = json.result;
                     if(!Boolean(result)) return;
-                    
+                    if(
+                        _xmppChatDialogs[localJID] && 
+                        _xmppChatDialogs[localJID][buddyJID]
+                    )
+                        _xmppChatDialogs[localJID][buddyJID]
+                            .receiveMessage(result)
+                        ;
                 };
             };
             $.ajax({
