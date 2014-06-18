@@ -194,20 +194,30 @@ function _xmppClientMain(jid){
         if(false === v) return; // not retrived, but may not empty.
         var list = $(dialog._dialogSelector).find('[name="buddy-list"]');
         // remove the no longer existing entry and insert new entries
-        var jids = [];
+        var jids = [], target, zustand;
         for(var groupName in v){
             for(var j in v[groupName]){
                 jids.push(j);
-                if(list.find('[data-jid="' + j + '"]').length > 0) continue;
-                list.append($('<a>', {href: '#'}).addClass('list-group-item')
-                    .text(j)
-                    .attr('data-jid', j)
-                    .click((function(localJID, buddyJID){
-                        return function(){
-                            _xmppChatDialogGenerate(localJID, buddyJID);
-                        };
-                    })(jid, j))
-                );
+                target = list.find('[data-jid="' + j + '"]');
+                if(target.length <= 0){
+                    target = $('<a>', {href: '#'}).addClass('list-group-item')
+                        .text(j)
+                        .attr('data-jid', j)
+                        .click((function(localJID, buddyJID){
+                            return function(){
+                                _xmppChatDialogGenerate(localJID, buddyJID);
+                            };
+                        })(jid, j))
+                        .appendTo(list)
+                    ;
+                };
+                
+                // set proper status display for this target
+                zustand = v[groupName][j]['status'] || 'unavailable';
+                target.removeClass('list-group-item-success list-group-item-warning');
+                if('available' == zustand)
+                    target.addClass('list-group-item-success');
+                
             };
         };
         list.find("[data-jid]").each(function(){
