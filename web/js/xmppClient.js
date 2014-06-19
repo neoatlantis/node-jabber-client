@@ -201,7 +201,7 @@ function _xmppClientMain(jid){
                 target = list.find('[data-jid="' + j + '"]');
                 if(target.length <= 0){
                     target = $('<a>', {href: '#'}).addClass('list-group-item')
-                        .text(j)
+                        .text(v[groupName][j].name || j)
                         .attr('data-jid', j)
                         .click((function(localJID, buddyJID){
                             return function(){
@@ -218,6 +218,7 @@ function _xmppClientMain(jid){
                 if('available' == zustand)
                     target.addClass('list-group-item-success');
                 
+                // set status text
             };
         };
         list.find("[data-jid]").each(function(){
